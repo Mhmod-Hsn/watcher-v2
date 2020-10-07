@@ -1,0 +1,16 @@
+html[lang='ar']{
+
+    @import "bootstrap_rtl";
+
+
+    direction: rtl;
+    text-align: right;
+
+    body{
+        text-align: right;
+    }
+    .list-group{
+        padding-left: 0;
+        text-align: right;
+    }
+}

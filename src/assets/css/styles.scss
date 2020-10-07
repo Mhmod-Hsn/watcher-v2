@@ -1,0 +1,122 @@
+/**********************
+      Imports
+***********************/
+@import "variables";
+// Bootstrap and its default variables
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+// BootstrapVue and its default variables
+@import "../../../node_modules/bootstrap-vue/src/index.scss";
+
+html[lang="ar"] {
+  .rtl {
+    direction: rtl;
+  }
+}
+body{
+  color: #fff;
+}
+
+.btn-gradient {
+  background: map-get($theme-colors, secondary);
+  background: linear-gradient(90deg, #199cde 0%, #00cbff 50%, #199cde 100%);
+  color: #fff;
+  border: 0;
+  transition: background-position $transition-normal ease-in-out;
+  background-size: 200% 100%;
+
+  &:hover {
+    background-position: 100% 0;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.box-shadow-none {
+  box-shadow: none !important;
+}
+
+// Modal
+.modal {
+  button.close {
+    outline: none;
+  }
+
+  .modal-title {
+    text-transform: capitalize;
+  }
+}
+
+.toast {
+  z-index: 99999999999;
+}
+.slick-next {
+  right: 5px !important;
+  z-index: 1;
+}
+.slick-prev {
+  left: 5px !important;
+  z-index: 1;
+}
+.slick-dots li {
+  margin: 0 5px;
+  width: 30px !important;
+  height: 5px !important;
+  position: relative;
+
+  button:before {
+    width: 100% !important;
+    height: 100% !important;
+    background: var(--secondary) !important;
+    content: "" !important;
+  }
+}
+
+.rate {
+  output {
+    box-shadow: none;
+  }
+}
+
+// remove shadow when click on rating
+.rate .b-rating {
+  box-shadow: none;
+}
+
+// Forms
+
+.custom-file {
+  .custom-file-label::after {
+    border-radius: 0;
+  }
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+
+// fix b-aspect in arabic
+html[lang="ar"] {
+  .b-aspect {
+    direction: ltr;
+  }
+}
+
+// transparent lightbox thumbs
+.cool-lightbox .cool-lightbox-thumbs {
+  background: rgba(0, 0, 0, 0) !important;
+}
+.cool-lightbox
+  .cool-lightbox-thumbs
+  .cool-lightbox-thumbs__list
+  .cool-lightbox__thumb:before {
+  border-color: var(--secondary);
+}
+
+@import "_animation";
+@import "_rtl";
