@@ -4,7 +4,7 @@
 		<Navbar />
 		
 		<transition mode="out-in" name="slide-down">
-			<div class="py-3">
+			<div class="">
 				<router-view/>
 			</div>
 		</transition>

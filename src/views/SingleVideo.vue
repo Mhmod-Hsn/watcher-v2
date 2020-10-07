@@ -1,140 +1,156 @@
 <template>
 	<LoadingCard v-if="!item"/>
+	
 	<div
-		class="container py-lg-5 py-md-3 py-2"
-		id="single-video"
-		v-else>
+		:style="{ backgroundImage: `linear-gradient(
+									  -180deg,
+									  rgba(0, 0, 0, 0) 0%,
+									  rgba(36 ,36, 36, 1) 50%
+									),
+									url(${item.main_image.url})`}"
 		
-		<div class="row">
-			<div class="col-md-4 col-sm-6">
-				<b-aspect
-					:style="{ backgroundImage: `url(${item.poster.formats.medium.url})` }"
-					aspect="2:3"
-					class="position-relative br-10 bg-image poster shadow border border-dark-light"
-					tag="div"
-				>
-				</b-aspect>
-			</div>
-			<div class="col-md-8 col-sm-6">
-				<div class="card bg-dark-light br-10 h-100">
-					<div class="card-body d-flex  flex-column">
-						<div class="d-flex justify-content-between  h5 mb-3 ">
-							<div class="d-flex justify-content-between">
-								<b-badge pill variant="warning">
-									<i class="far fa-star mr-2"></i>
-									{{item.rate}}
-								</b-badge>
+		style="background-size: contain!important;background-position: top center!important;"
+		class="position-relative bg-image"
+		v-else
+	>
+	
+		<div
+			class="container py-lg-5 py-md-3 py-2"
+			id="single-video"
+		>
+			
+			<div class="row">
+				<div class="col-md-4 col-sm-6">
+					<b-aspect
+						:style="{ backgroundImage: `url(${item.poster.formats.medium.url})` }"
+						aspect="2:3"
+						class="position-relative br-10 bg-image poster shadow border border-dark-light"
+						tag="div"
+					>
+					</b-aspect>
+				</div>
+				<div class="col-md-8 col-sm-6">
+					<div class="card bg-dark-light br-10 h-100">
+						<div class="card-body d-flex  flex-column">
+							<div class="d-flex justify-content-between  h5 mb-3 ">
+								<div class="d-flex justify-content-between">
+									<b-badge pill variant="warning">
+										<i class="far fa-star mr-2"></i>
+										{{item.rate}}
+									</b-badge>
+									
+									<b-badge class="ml-2" pill variant="primary">
+										{{item.release_year}}
+									</b-badge>
+									
+									<b-badge class="ml-2" pill variant="secondary">
+										{{item.category.name}}
+									</b-badge>
+									
+									<b-badge class="ml-2" pill variant="success">
+										<i class="far fa-eye"></i>
+										{{item.watch_count}}
+									</b-badge>
+								</div>
 								
-								<b-badge class="ml-2" pill variant="primary">
-									{{item.release_year}}
+								<b-badge pill v-if="item.adult" variant="danger">
+									<i class="far fa-exclamation-triangle"></i>
+									+18
 								</b-badge>
-								
-								<b-badge class="ml-2" pill variant="secondary">
-									{{item.category.name}}
-								</b-badge>
-								
-								<b-badge class="ml-2" pill variant="success">
-									<i class="far fa-eye"></i>
-									{{item.watch_count}}
-								</b-badge>
+							
 							</div>
 							
-							<b-badge pill v-if="item.adult" variant="danger">
-								<i class="far fa-exclamation-triangle"></i>
-								+18
-							</b-badge>
-						
-						</div>
-						
-						<h2 class="name">{{item.name}}</h2>
-						
-						<div class="row">
-							<div class="col-6">
-								Tags:
-								<div class="tags">
-									<b-badge class="mb-1 mr-2" pill
-									         v-for="tag in item.tags"
-									         :key="tag.id"
-									         variant="secondary">
-										{{tag.name}}
-									</b-badge>
+							<h2 class="name">{{item.name}}</h2>
+							
+							<div class="row">
+								<div class="col-6">
+									Tags:
+									<div class="tags">
+										<b-badge class="mb-1 mr-2" pill
+										         v-for="tag in item.tags"
+										         :key="tag.id"
+										         variant="secondary">
+											{{tag.name}}
+										</b-badge>
+									</div>
+								</div>
+								<div class="col-6">
+									Actors:
+									<div class="tags">
+										<b-badge
+											class="mb-1 mr-2" pill
+									        v-for="actor in item.actors"
+											:key="actor.id"
+											variant="secondary"
+										>
+											{{actor.name}}
+										</b-badge>
+									</div>
 								</div>
 							</div>
-							<div class="col-6">
-								Actors:
-								<div class="tags">
-									<b-badge
-										class="mb-1 mr-2" pill
-								        v-for="actor in item.actors"
-										:key="actor.id"
-										variant="secondary"
-									>
-										{{actor.name}}
-									</b-badge>
-								</div>
-							</div>
+							
+							<p class="story">{{item.story}}</p>
+							
+							<b-button
+								@click="watchTrailer"
+								block
+								variant="dark"
+								class="mt-auto"
+							>Trailer
+							</b-button>
+						
 						</div>
-						
-						<p class="story">{{item.story}}</p>
-						
-						<b-button
-							@click="watchTrailer"
-							block
-							variant="dark"
-							class="mt-auto"
-						>Trailer
-						</b-button>
-					
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="watch mt-4 shadow">
-			<plyr v-if="(item.adult && (item.skipper || !lock)) || !item.adult ">
-				<video @timeupdate="watchTime" crossorigin="anonymous" id="player">
-					<source :src="base_url+item.media.url" :type="item.media.mime"/>
-					
-					
-					<!-- Captions are optional -->
-					<track
-						:default="index === 0"
-						:key="sub.id"
-						:label="sub.language"
-						:src="base_url+sub.file.url"
-						:srclang="sub.language_code"
-						kind="captions"
-						v-for="(sub,index) in item.subtitles"
-					/>
-				
-				</video>
-			</plyr>
-			<div
-				class="p-3"
-				v-else>
-				this video is adult and has no skipper
-				
-				
-				<b-button
-					@click="lock=false"
-					variant="danger"
-					class="mt-auto ml-3"
-				>
-					<i class="far fa-exclamation-triangle"></i>
-					Unlock anyway
-				</b-button>
-			</div>
-		</div>
-		
-		<div class="card mt-5 bg-dark-light">
-			<div class="card-body">
-				<p>This section for skipper test purposes</p>
-				
-				<code><pre>{{item.skipper}}</pre></code>
 			
+			<div class="watch mt-4 shadow">
+				<plyr v-if="(item.adult && (item.skipper || !lock)) || !item.adult ">
+					<video @timeupdate="watchTime" crossorigin="anonymous" id="player">
+						<source :src="base_url+item.media.url" :type="item.media.mime"/>
+						
+						
+						<!-- Captions are optional -->
+						<track
+							:default="index === 0"
+							:key="sub.id"
+							:label="sub.language"
+							:src="base_url+sub.file.url"
+							:srclang="sub.language_code"
+							kind="captions"
+							v-for="(sub,index) in item.subtitles"
+						/>
+					
+					</video>
+				</plyr>
+				<div
+					class="p-3"
+					v-else>
+					this video is adult and has no skipper
+					
+					
+					<b-button
+						@click="lock=false"
+						variant="danger"
+						class="mt-auto ml-3"
+					>
+						<i class="far fa-exclamation-triangle"></i>
+						Unlock anyway
+					</b-button>
+				</div>
+			</div>
+			
+			<div class="card mt-5 bg-dark-light">
+				<div class="card-body">
+					<p>This section for skipper test purposes</p>
+					
+					<code><pre>{{item.skipper}}</pre></code>
+				
+				</div>
 			</div>
 		</div>
 	</div>
+
 </template>
 
 <script>
